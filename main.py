@@ -5,7 +5,7 @@ import capsolver
 import colorama
 from colorama import init, Fore
 init(autoreset=True)
-capsolver.api_key = "CAP-899B13265A5B34646E0A4E034EC970C9" # capsolver key here
+capsolver.api_key = "CAP-*******" # capsolver key here
 
 def check_response(stick, rotating, token):
     if stick == '{"download_token":[{"message":"Invalid download token","code":"invalid"}]}':
