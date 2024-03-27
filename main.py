@@ -59,7 +59,7 @@ def solve_captcha():
             captcha_solution = solution.get('gRecaptchaResponse')
             return captcha_solution
     except Exception as e:
-
+        print(f"An error occurred: {e}")
 
 def register():
     try:
