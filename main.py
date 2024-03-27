@@ -135,15 +135,39 @@ def get_proxy(token):
 
             check_response(stick, rotating, token)
 
-            with open("./sticky.txt", "a") as file:
-                file.write(stick)  
+            if stick == '{"download_token":[{"message":"Invalid download token","code":"invalid"}]}':
+                print(f"[=]" + Fore.RED + f" Invalid download token\n")
+                return get_proxy(token)
+                    
+            elif "Request was throttled" in stick:
+                print(f"[=]" + Fore.RED + f" Request was throttled\n")
+                return get_proxy(token)
+            
+            elif "\n" not in stick:
+                stick = stick + "\n"
+                return stick
+            
+            elif "Request was throttled" in rotating:
+                print(f"[=]" + Fore.RED + f" Request was throttled\n")
+                return get_proxy(token)
+            
+            elif "Invalid download token" in rotating:
+                print(f"[=]" + Fore.RED + f" Invalid download token\n")
+                return get_proxy(token)
+            
+            elif "None" in rotating:
+                print(f"[=]" + Fore.RED + f" Rotating proxy was not found\n")
+                return get_proxy(token)
+            
+            else:
+                with open("./sticky.txt", "a") as file:
+                    file.write(stick)  
 
-            with open("./rotating.txt", "a") as file:
-                file.write(rotating + "\n")
+                with open("./rotating.txt", "a") as file:
+                    file.write(rotating + "\n")
 
-            print(f"[=]" + Fore.GREEN + f" Proxies successfully saved\n")
-
-            return mano
+                print(f"[=]" + Fore.GREEN + f" Proxies successfully saved\n")
+                return mano
     except Exception as e:
         print(f"An error occurred: {e}")
 
