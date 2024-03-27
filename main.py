@@ -51,7 +51,7 @@ def solve_captcha():
             captcha_solution = solution.get('gRecaptchaResponse')
             return captcha_solution
     except Exception as e:
-        print(f"An error occurred: {e}")
+
 
 def register():
     try:
@@ -90,8 +90,10 @@ def register():
             raise Exception("Failed to extract token from response")
         return tokenn
     except Exception as e:
-        print(f"An error occurred: {e}")
-        register()
+        if "Request was throttled" in stick:
+            print(f"[=]" + Fore.RED + f" Request was throttled\n")
+        else:
+            print(f"An error occurred: {e}")
 
 def get_proxy(token):
     try:
