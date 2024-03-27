@@ -4,10 +4,33 @@ import time
 import capsolver
 import colorama
 from colorama import init, Fore
-import threading
-
 init(autoreset=True)
-capsolver.api_key = "CAP-*******"  # capsolver key here
+capsolver.api_key = "CAP-899B13265A5B34646E0A4E034EC970C9" # capsolver key here
+
+def check_response(stick, rotating, token):
+    if stick == '{"download_token":[{"message":"Invalid download token","code":"invalid"}]}':
+        print(f"[=]" + Fore.RED + f" Invalid download token\n")
+        return get_proxy(token)
+            
+    if "Request was throttled" in stick:
+        print(f"[=]" + Fore.RED + f" Request was throttled\n")
+        return get_proxy(token)
+    
+    if "\n" not in stick:
+        stick = stick + "\n"
+        return stick
+    
+    if "Request was throttled" in rotating:
+        print(f"[=]" + Fore.RED + f" Request was throttled\n")
+        return get_proxy(token)
+    
+    if "Invalid download token" in rotating:
+        print(f"[=]" + Fore.RED + f" Invalid download token\n")
+        return get_proxy(token)
+    
+    if "None" in rotating:
+        print(f"[=]" + Fore.RED + f" Rotating proxy was not found\n")
+        return get_proxy(token)
 
 def generate_random_email():
     random.seed(time.time())
@@ -34,6 +57,7 @@ def register():
     try:
         url = "https://proxy.webshare.io/api/v2/register/"
 
+        
         email = generate_random_email()
         payload = {
             "email": email,
@@ -60,11 +84,11 @@ def register():
         }
         response = requests.post(url, json=payload, headers=headers)
         response_json = response.json()
-        token = response_json.get("token")
-        if not token:
+        tokenn = response_json.get("token")
+        if not tokenn:
             print(response_json)
             raise Exception("Failed to extract token from response")
-        return token
+        return tokenn
     except Exception as e:
         print(f"An error occurred: {e}")
         register()
@@ -99,38 +123,30 @@ def get_proxy(token):
             password = response_json.get("password")
             rotating = f"{username}-rotate:{password}@p.webshare.io:80"
 
+            check_response(stick, rotating, token)
+
             with open("./sticky.txt", "a") as file:
-                file.write(stick)
+                file.write(stick)  
 
             with open("./rotating.txt", "a") as file:
                 file.write(rotating + "\n")
 
             print(f"[=]" + Fore.GREEN + f" Proxies successfully saved\n")
+
+            return mano
     except Exception as e:
         print(f"An error occurred: {e}")
         register()
 
-def run_threads(num_threads):
-    threads = []
-    for _ in range(num_threads):
-        thread = threading.Thread(target=worker)
-        thread.start()
-        threads.append(thread)
-
-    for thread in threads:
-        thread.join()
-
-def worker():
+if __name__ == "__main__":
     try:
-        for _ in range(9999999):
+        for i in range(9999999):
             token = register()  # Register an account and get the token
             print(f"[!]" + Fore.BLUE + " Successfully got token .")
             print(f"[!]" + Fore.BLUE + " Getting proxies")
+
             get_proxy(token)
+            i += 1  
     except Exception as e:
         print(f"An error occurred: {e}")
-        worker()
-
-if __name__ == "__main__":
-    num_threads = int(input("Enter the number of threads: "))
-    run_threads(num_threads)
+        token = register() 
