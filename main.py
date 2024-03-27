@@ -98,7 +98,7 @@ def register():
             raise Exception("Failed to extract token from response")
         return tokenn
     except Exception as e:
-        if "Request was throttled" in stick:
+        if "Request was throttled" in str(e):
             print(f"[=]" + Fore.RED + f" Request was throttled\n")
         else:
             print(f"An error occurred: {e}")
