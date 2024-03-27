@@ -3,9 +3,17 @@ import random
 import time
 import capsolver
 import colorama
+import dotenv
+import os
 from colorama import init, Fore
 init(autoreset=True)
-capsolver.api_key = "CAP-899B13265A5B34646E0A4E034EC970C9" # capsolver key here
+dotenv.load_dotenv()
+
+if not os.getenv("CAPSOLVER_API_KEY"):
+    capsolver.api_key = "CAP-*****" # capsolver key here
+else:
+    capsolver.api_key = os.getenv("CAPSOLVER_API_KEY")
+
 
 def check_response(stick, rotating, token):
     if stick == '{"download_token":[{"message":"Invalid download token","code":"invalid"}]}':
@@ -138,7 +146,6 @@ def get_proxy(token):
             return mano
     except Exception as e:
         print(f"An error occurred: {e}")
-        register()
 
 if __name__ == "__main__":
     try:
